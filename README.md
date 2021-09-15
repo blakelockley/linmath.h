@@ -1,15 +1,11 @@
-# linmath.h -- A small library for linear math as required for computer graphics
+# linmath
 
-[![CircleCI](https://circleci.com/gh/datenwolf/linmath.h.svg?style=svg)](https://app.circleci.com/pipelines/github/datenwolf/linmath.h)
+Reimplementation of the [linmath](https://github.com/datenwolf/linmath.h) header only library for graphics programming math.
 
+The motivation of linmath is to provide a more consistent and slightly more usable interface than the original implementation.
 
-linmath.h provides the most used types required for programming computer graphics:
+linmath reuses the existing interface of the original implementation meaning the header files can be easily switched out for existing projects with only none to a few corrections required. Similarly, as stated in the original implementation:
 
-vec3 -- 3 element vector of floats
-vec4 -- 4 element vector of floats (4th component used for homogenous computations)
-mat4x4 -- 4 by 4 elements matrix, computations are done in column major order
-quat -- quaternion
+> The types are deliberately named like the types in GLSL. In fact they are meant to be used > for the client side computations and passing to same typed GLSL uniforms.
 
-The types are deliberately named like the types in GLSL. In fact they are meant to
-be used for the client side computations and passing to same typed GLSL uniforms.
-
+The mat4x4 type is stored and operated on in column major order.
