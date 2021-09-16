@@ -302,7 +302,7 @@ static inline void mat4x4_mul_vec4(vec4 r, const mat4x4 m, const vec4 v) {
     vec4_copy(r, tmp);
 }
 
-static inline int mat4x4_invert(mat4x4 M, const mat4x4 m) {
+static inline void mat4x4_invert(mat4x4 M, const mat4x4 m) {
     mat4x4 tmp;
 
     float s[6], c[6];
