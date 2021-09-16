@@ -434,14 +434,14 @@ static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, fl
 }
 
 static inline void mat4x4_perspective(mat4x4 M, float fov, float aspect, float n, float f) {
-    float const a = 1.0f / tanf((fov / 2.0f) * (M_PI / 180.0f));
+    float a = 1.0f / tanf(fov / 2.0f);
 
     mat4x4_zero(M);
     M[0][0] = a / aspect;
     M[1][1] = a;
-    M[2][2] = -(f + n) / (f - n);
+    M[2][2] = -((f + n) / (f - n));
     M[2][3] = -1.0f;
-    M[3][2] = -2.0f * f * n / (f - n);
+    M[3][2] = -((2.0f * f * n) / (f - n));
 }
 
 static inline void mat4x4_look_at(mat4x4 M, const vec3 eye, const vec3 center, const vec3 up) {
