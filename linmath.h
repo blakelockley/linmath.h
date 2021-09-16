@@ -346,11 +346,11 @@ static inline int mat4x4_invert(mat4x4 M, const mat4x4 m) {
     mat4x4_copy(M, tmp);
 }
 
-static inline void mat4x4_scale(mat4x4 M, float x, float y, float z) {
-    mat4x4_identity(M);
-    M[0][0] = x;
-    M[1][1] = y;
-    M[2][2] = z;
+static inline void mat4x4_scale(mat4x4 M, const mat4x4 m, float x, float y, float z) {
+    vec4_scale(M[0], m[0], x);
+    vec4_scale(M[1], m[1], y);
+    vec4_scale(M[2], m[2], z);
+    vec4_copy(M[3], m[3]);
 }
 
 static inline void mat4x4_translation(mat4x4 M, float x, float y, float z) {
@@ -358,6 +358,12 @@ static inline void mat4x4_translation(mat4x4 M, float x, float y, float z) {
     M[3][0] = x;
     M[3][1] = y;
     M[3][2] = z;
+}
+
+static inline void mat4x4_translate(mat4x4 M, const mat4x4 m, float x, float y, float z) {
+    mat4x4 tmp;
+    mat4x4_translation(tmp, x, y, z);
+    mat4x4_mul(M, m, tmp);
 }
 
 static inline void mat4x4_rotation_x(mat4x4 M, float angle) {
@@ -371,6 +377,12 @@ static inline void mat4x4_rotation_x(mat4x4 M, float angle) {
     M[2][2] = +c;
 }
 
+static inline void mat4x4_rotate_x(mat4x4 M, const mat4x4 m, float angle) {
+    mat4x4 tmp;
+    mat4x4_rotation_x(tmp, angle);
+    mat4x4_mul(M, m, tmp);
+}
+
 static inline void mat4x4_rotation_y(mat4x4 M, float angle) {
     float s = sinf(angle);
     float c = cosf(angle);
@@ -380,6 +392,12 @@ static inline void mat4x4_rotation_y(mat4x4 M, float angle) {
     M[0][2] = +s;
     M[2][0] = -s;
     M[2][2] = +c;
+}
+
+static inline void mat4x4_rotate_y(mat4x4 M, const mat4x4 m, float angle) {
+    mat4x4 tmp;
+    mat4x4_rotation_y(tmp, angle);
+    mat4x4_mul(M, m, tmp);
 }
 
 static inline void mat4x4_rotation_z(mat4x4 M, float angle) {
@@ -393,18 +411,16 @@ static inline void mat4x4_rotation_z(mat4x4 M, float angle) {
     M[1][1] = +c;
 }
 
-static inline void mat4x4_rotation(mat4x4 M, float yaw, float pitch, float roll) {
+static inline void mat4x4_rotate_z(mat4x4 M, const mat4x4 m, float angle) {
     mat4x4 tmp;
-    mat4x4_identity(M);
+    mat4x4_rotation_z(tmp, angle);
+    mat4x4_mul(M, m, tmp);
+}
 
-    mat4x4_rotation_y(tmp, yaw);
-    mat4x4_mul(M, M, tmp);
-
-    mat4x4_rotation_x(tmp, pitch);
-    mat4x4_mul(M, M, tmp);
-
-    mat4x4_rotation_z(tmp, roll);
-    mat4x4_mul(M, M, tmp);
+static inline void mat4x4_rotate(mat4x4 M, const mat4x4 m, float yaw, float pitch, float roll) {
+    mat4x4_rotate_y(M, m, yaw);
+    mat4x4_rotate_x(M, m, pitch);
+    mat4x4_rotate_z(M, m, roll);
 }
 
 static inline void mat4x4_ortho(mat4x4 M, float l, float r, float b, float t, float n, float f) {
@@ -437,19 +453,21 @@ static inline void mat4x4_look_at(mat4x4 M, const vec3 eye, const vec3 center, c
     vec3_cross(right, forward, up);
     vec3_normalize(right, right);
 
+    vec3 t;
+    vec3_cross(t, right, forward);
+
     mat4x4_identity(M);
     M[0][0] = right[0];
     M[1][0] = right[1];
     M[2][0] = right[2];
-    M[0][1] = up[0];
-    M[1][1] = up[1];
-    M[2][1] = up[2];
+    M[0][1] = t[0];
+    M[1][1] = t[1];
+    M[2][1] = t[2];
     M[0][2] = -forward[0];
     M[1][2] = -forward[1];
     M[2][2] = -forward[2];
-    M[3][0] = -eye[0];
-    M[3][1] = -eye[1];
-    M[3][2] = -eye[2];
+
+    mat4x4_translate(M, M, -eye[0], -eye[1], -eye[2]);
 }
 
 #endif  // LINMATH_H
