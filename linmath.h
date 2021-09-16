@@ -372,8 +372,8 @@ static inline void mat4x4_rotation_x(mat4x4 M, float angle) {
 
     mat4x4_identity(M);
     M[1][1] = +c;
-    M[1][2] = -s;
-    M[2][1] = +s;
+    M[1][2] = +s;
+    M[2][1] = -s;
     M[2][2] = +c;
 }
 
@@ -389,8 +389,8 @@ static inline void mat4x4_rotation_y(mat4x4 M, float angle) {
 
     mat4x4_identity(M);
     M[0][0] = +c;
-    M[0][2] = +s;
-    M[2][0] = -s;
+    M[0][2] = -s;
+    M[2][0] = +s;
     M[2][2] = +c;
 }
 
@@ -406,8 +406,8 @@ static inline void mat4x4_rotation_z(mat4x4 M, float angle) {
 
     mat4x4_identity(M);
     M[0][0] = +c;
-    M[0][1] = -s;
-    M[1][0] = +s;
+    M[0][1] = +s;
+    M[1][0] = -s;
     M[1][1] = +c;
 }
 
